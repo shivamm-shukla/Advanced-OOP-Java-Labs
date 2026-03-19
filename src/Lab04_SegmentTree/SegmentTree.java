@@ -31,28 +31,25 @@ public class SegmentTree {
         }
 
         void BuildST() {
-            buildhelper(1);
+            buildHelper(1);
         }
 
-        void buildhelper(int index) {
+        void buildHelper(int index) {
 
-
-            if (index >= paddedSize) {
-
-                // padded nodes
-                if (index >= paddedSize + inputData.size()) {
-                    STList.set(index, 0);
-                }
-                // actual data
-                else {
-                    STList.set(index, inputData.get(index - paddedSize));
-                }
+            // Only real data leaves
+            if (index >= paddedSize && index < paddedSize + inputData.size()) {
+                STList.set(index, inputData.get(index - paddedSize));
                 return;
             }
 
-            // internal nodes
-            buildhelper(2 * index);
-            buildhelper(2 * index + 1);
+            // Skip padded leaves (already 0)
+            if (index >= paddedSize) {
+                return;
+            }
+
+            // Internal nodes
+            buildHelper(2 * index);
+            buildHelper(2 * index + 1);
 
             STList.set(index,
                     STList.get(2 * index) + STList.get(2 * index + 1));
