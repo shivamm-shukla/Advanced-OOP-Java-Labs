@@ -30,6 +30,7 @@ public class SegmentTree {
             return k;
         }
 
+        // Task 1: Build Segement Tree
         void BuildST() {
             buildHelper(1);
         }
@@ -56,6 +57,57 @@ public class SegmentTree {
         }
 
 
+        // Task 2: Range find Querry
+
+        public int findSum(int start, int end) {
+            if (start > end) return 0;
+
+            return queryHelper(start, end, 0, paddedSize - 1, 1);
+        }
+
+        private int queryHelper(int l, int r, int start, int end, int node) {
+
+            // Case 1: Complete overlap
+            if (l <= start && r >= end) {
+                return STList.get(node);
+            }
+
+            // Case 2: No overlap
+            if (r < start || l > end) {
+                return 0;
+            }
+
+            // Case 3: Partial overlap
+            int mid = start + (end - start) / 2;
+
+            int leftSum = queryHelper(l, r, start, mid, 2 * node);
+            int rightSum = queryHelper(l, r, mid + 1, end, 2 * node + 1);
+
+            return leftSum + rightSum;
+        }
+
+        // Task 2: Update Querry
+        public void update(int idx, int val) {
+
+            // Update input array
+            inputData.set(idx, val);
+
+            // Go to leaf
+            int STidx = paddedSize + idx;
+
+            // Update leaf
+            STList.set(STidx, val);
+
+            // Update ancestors
+            while (STidx > 1) {
+                STidx = STidx / 2;
+
+                STList.set(STidx,
+                        STList.get(2 * STidx) + STList.get(2 * STidx + 1));
+            }
+        }
+
+
     }
 
     public static void main(String[] args) {
@@ -63,6 +115,10 @@ public class SegmentTree {
 
         RangeSumST s = new RangeSumST(inputData);
         System.out.println(s.STList);
+
+        s.update(1,5);
+        System.out.println(s.STList);
+        System.out.println(inputData);
     }
 }
 
