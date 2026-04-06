@@ -1,77 +1,163 @@
-package Lab05_BehavioralDesignPatterns;
+package Lab05_BehavioralDesignPatterns.ObserverPattern;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-interface priceObserver {
-    void notify(String ticker, double oldPrice, double newPrice);
+
+interface StockObserver {
+    void onPriceChanged(String ticker, double oldPrice, double newPrice);
 }
-
-class DashboardDisplay implements priceObserver {
-    @Override
-    public void notify(String ticker, double oldPrice, double newPrice) {
-        refreshTicker(ticker, oldPrice, calculateChange(oldPrice, newPrice));
-    }
-    private void refreshTicker(String ticker, double oldPrice, double newPrice) {
-        System.out.println(ticker + " - " + oldPrice + " - " + newPrice);
-    }
-    private double calculateChange(double oldPrice, double newPrice) {
-        if (oldPrice == 0) return 0;
-        return ((newPrice - oldPrice) / oldPrice)*100;
-
-    }
-
-}
-
-class AlertSystemDisplay implements priceObserver {
-    @Override
-    public void notify(String ticker, double oldPrice, double newPrice) {
-    if (Math.abs(newPrice - oldPrice) / oldPrice > 0.05) {
-        sendThresholdAlert(ticker, oldPrice, newPrice);
-    }
-    }
-    private void sendThresholdAlert(String ticker, double oldPrice, double newPrice) {
-        System.out.println("Alert for " + ticker + ": " + oldPrice + " - " + newPrice);
-    }
-}
-
-class TradeLogger implements priceObserver {
-    @Override
-    public void notify(String ticker, double oldPrice, double newPrice) {
-    logPriceChange(ticker,oldPrice, newPrice, System.currentTimeMillis());
-    }
-    private void logPriceChange(String ticker, double oldPrice, double newPrice, long timestamp) {
-        System.out.println(ticker + " - " + oldPrice + " - " + newPrice);
-    }
-}
-
 
 
 class StockMarket {
     private Map<String, Double> prices = new HashMap<>();
-    private List<priceObserver> observers = new ArrayList<>();
-    public void updatePrice(String ticker, double newPrice){
+    private List<StockObserver> observers = new ArrayList<>();
+
+    // --- Observer management ---
+
+    public void addObserver(StockObserver observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(StockObserver observer) {
+        observers.remove(observer);
+    }
+
+    // --- Core logic ---
+
+    public void updatePrice(String ticker, double newPrice) {
         double oldPrice = prices.getOrDefault(ticker, 0.0);
         prices.put(ticker, newPrice);
-
-        for (priceObserver observer : observers) {
-            observer.notify(ticker, oldPrice, newPrice);
-        }
-
+        notifyObservers(ticker, oldPrice, newPrice);
     }
-    public double getPrice(String ticker){
+
+    public double getPrice(String ticker) {
         return prices.getOrDefault(ticker, 0.0);
     }
-}
 
-public class Main {
-    public static void main(String[] args) {
-        StockMarket market = new StockMarket();
+    // --- Private helpers ---
 
-        market.updatePrice("BMW", 100.0);
-        market.updatePrice("TCS", 2600.00);
-        market.updatePrice("TCS", 20000.00);
+    private void notifyObservers(String ticker, double oldPrice, double newPrice) {
+        for (StockObserver observer : observers) {
+            try {
+                observer.onPriceChanged(ticker, oldPrice, newPrice);
+            } catch (Exception e) {
+                // Defensive: one bad observer must not block the rest
+                System.err.printf("[StockMarket] Observer %s threw an exception: %s%n",
+                        observer.getClass().getSimpleName(), e.getMessage());
+            }
+        }
     }
 }
+
+
+class DashboardDisplay implements StockObserver {
+
+    @Override
+    public void onPriceChanged(String ticker, double oldPrice, double newPrice) {
+        double percentChange = calculateChange(oldPrice, newPrice);
+        System.out.printf("[DASHBOARD] %s: ₹%.2f (%+.1f%%)%n",
+                ticker, newPrice, percentChange);
+    }
+
+    private double calculateChange(double old, double now) {
+        if (old == 0) return 0;
+        return ((now - old) / old) * 100;
+    }
+}
+
+
+class AlertSystem implements StockObserver {
+    private static final double THRESHOLD = 0.05; // 5%
+
+    @Override
+    public void onPriceChanged(String ticker, double oldPrice, double newPrice) {
+        if (oldPrice == 0) return;
+        if (Math.abs(newPrice - oldPrice) / oldPrice > THRESHOLD) {
+            System.out.printf("[ALERT] %s moved from ₹%.2f to ₹%.2f (>5%% change)%n",
+                    ticker, oldPrice, newPrice);
+        }
+    }
+}
+
+
+class TradeLogger implements StockObserver {
+
+    @Override
+    public void onPriceChanged(String ticker, double oldPrice, double newPrice) {
+        long timestamp = System.currentTimeMillis(); // observer computes its own timestamp
+        System.out.printf("[LOG %d] %s: ₹%.2f -> ₹%.2f%n",
+                timestamp, ticker, oldPrice, newPrice);
+    }
+}
+
+
+class MobilePushObserver implements StockObserver {
+    private final String username;
+
+    public MobilePushObserver(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public void onPriceChanged(String ticker, double oldPrice, double newPrice) {
+        double change = oldPrice == 0 ? 0 : ((newPrice - oldPrice) / oldPrice) * 100;
+        System.out.printf("[PUSH → %s] %s is now ₹%.2f (%+.1f%%)%n",
+                username, ticker, newPrice, change);
+    }
+}
+
+
+// Main.java
+public class Main {
+    public static void main(String[] args) {
+
+        StockMarket market = new StockMarket();
+
+        // Wire up original three observers
+        market.addObserver(new DashboardDisplay());
+        market.addObserver(new AlertSystem());
+        market.addObserver(new TradeLogger());
+
+        // Add the new mobile push observer — no changes elsewhere needed
+        market.addObserver(new MobilePushObserver("rahul@example.com"));
+
+        System.out.println(".... Price Updates .....\n");
+
+        market.updatePrice("RELIANCE", 2450.00);
+        System.out.println();
+
+        market.updatePrice("TCS", 3200.00);
+        System.out.println();
+
+        market.updatePrice("RELIANCE", 2600.00);  // >5% change — alert fires
+        System.out.println();
+
+        market.updatePrice("INFY", 1500.00);
+        System.out.println();
+
+        market.updatePrice("TCS", 3100.00);
+        System.out.println();
+
+        // Demonstrate removeObserver — unsubscribe dashboard at runtime
+        System.out.println("... Dashboard unsubscribed ...\n");
+        DashboardDisplay dashboard = new DashboardDisplay();
+        market.addObserver(dashboard);
+        market.removeObserver(dashboard);
+        market.updatePrice("INFY", 1550.00);  // dashboard won't print
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+

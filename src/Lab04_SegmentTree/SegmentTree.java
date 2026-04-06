@@ -14,7 +14,7 @@ public class SegmentTree {
         int paddedSize;
 
         RangeSumST(List<Integer> inputData) {
-            this.inputData = inputData;
+            this.inputData = new ArrayList<>(inputData);
             this.paddedSize = getNextPower(inputData.size());
 
             STList = new ArrayList<>(Collections.nCopies(2 * paddedSize, 0));
@@ -22,7 +22,7 @@ public class SegmentTree {
             BuildST();
         }
 
-        public int getNextPower(int n) {
+        private int getNextPower(int n) {
             int k = 1;
             while (k < n) {
                 k = k * 2;
@@ -111,14 +111,19 @@ public class SegmentTree {
     }
 
     public static void main(String[] args) {
-        List<Integer> inputData = new ArrayList<>(Arrays.asList(2, 4, 10, -7,8));
+        List<Integer> data = new ArrayList<>(Arrays.asList(2, 4, 10, -7, 8));
 
-        RangeSumST s = new RangeSumST(inputData);
-        System.out.println(s.STList);
+        RangeSumST s = new RangeSumST(data);
 
-        s.update(1,5);
-        System.out.println(s.STList);
-        System.out.println(inputData);
+        System.out.println("ST List:   " + s.STList);
+        System.out.println("query(1,3) = " + s.findSum(1, 3));  // 4+10-7 = 7
+        System.out.println("query(0,4) = " + s.findSum(0, 4));  // 2+4+10-7+8 = 17
+
+        s.update(1, 5);
+        System.out.println("\nAfter update(1, 5):");
+        System.out.println("ST List:   " + s.STList);
+        System.out.println("query(1,3) = " + s.findSum(1, 3));  // 5+10-7 = 8
+        System.out.println("query(0,4) = " + s.findSum(0, 4));  // 2+5+10-7+8 = 18
     }
 }
 
