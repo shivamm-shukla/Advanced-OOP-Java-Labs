@@ -45,23 +45,138 @@ The board overrides `addEdge()` to block bidirectional edges and maintains its o
 
 ---
 
-(More labs will be added progressively.)
+### 🔹 Lab 04 – Segment Tree Implementation
+
+- Efficient range query handling using **Segment Tree**
+- Supports **range sum queries and point updates**
+- Tree built using **array-based representation**
+- Optimized space using **power-of-two padding**
+- Recursive tree construction and query resolution
+
+**Advanced Implementation:**
+- Generic Segment Tree using **Java Generics (`<T>`)**
+- Supports multiple operations via **`BinaryOperator<T>`**
+- Implemented for **Sum, Minimum, and GCD queries**
+
+---
+
+### 🔹 Lab 05 – Behavioral Design Patterns
+
+#### Observer Pattern (Stock Market System)
+
+- Implements **publish-subscribe model**
+- Multiple observers: Dashboard, Alerts, Logging, Mobile Push
+- Loose coupling between subject and observers
+- Fault-tolerant notification mechanism
+
+#### Strategy Pattern (Delivery Pricing System)
+
+- Multiple pricing strategies: Standard, Express, Scheduled, Subscription
+- Runtime strategy switching using **setter injection**
+- Demonstrates **Open/Closed Principle**
+- Real-world pricing logic simulation
+
+---
+
+### 🔹 Lab 06 – Structural Design Patterns
+
+#### Adapter Pattern (Weather API Integration)
+
+- Unified interface for multiple third-party weather APIs
+- Handles:
+    - Unit conversion (Fahrenheit → Celsius)
+    - Data format transformation
+- Demonstrates integration of incompatible systems
+
+#### Decorator Pattern (Message Processing System)
+
+- Dynamic addition of behaviors:
+    - Encryption
+    - Compression
+    - Timestamping
+    - Translation
+- Supports flexible chaining of operations
+- Demonstrates **Open/Closed Principle**
+
+---
+
+### 🔹 Lab 07 – Refactoring: E-Commerce System
+
+- Real-world system combining multiple design patterns:
+    - **Strategy** (Discount handling)
+    - **Adapter** (Payment gateway integration)
+    - **Observer** (Order notifications)
+- Clean separation of concerns
+- Easily extensible architecture
+
+---
+
+### 🔹 Lab 08 – Creational Design Patterns
+
+#### Factory Method Pattern
+
+- Eliminates large conditional logic using **polymorphism**
+- Parent class defines workflow (**Template Method**)
+- Subclasses handle object creation
+- Implemented using:
+    - Abstract class version
+    - Interface-based version
+- Demonstrates **Open/Closed Principle**
+
+#### Singleton Pattern
+
+- Ensures single instance across application
+- Implemented using:
+    - **Double-Checked Locking (thread-safe)**
+    - **Enum Singleton (recommended approach)**
+- Demonstrates global access and shared state consistency
+
+---
+
+### 🔹 Lab 09 – Multithreading (Producer-Consumer Problem)
+
+- Implementation using **ReentrantLock and Condition**
+- Supports multiple producers and consumers
+- Avoids race conditions and deadlocks
+- Uses `signalAll()` for proper thread coordination
+- Demonstrates real-world concurrency control
 
 ---
 
 ## 🧠 Concepts Covered
 
-- Encapsulation
-- Abstraction
-- Inheritance & Method Overriding
-- Modular class design
-- Graph modeling using adjacency list
-- BFS traversal algorithm
-- Functional Programming (Streams, Lambdas, Predicates)
-- Null Safety using `Optional`
-- Immutability
-- Exception handling
-- Object-oriented problem modeling
+- Encapsulation *(Lab 01)*
+- Abstraction *(Lab 01)*
+- Inheritance & Method Overriding *(Lab 02, Lab 03)*
+- Modular class design *(Lab 01, Lab 02)*
+- Graph modeling using adjacency list *(Lab 01, Lab 02)*
+- BFS traversal algorithm *(Lab 01, Lab 03)*
+
+- Object-oriented problem modeling *(Lab 02)*
+- Exception handling *(Lab 01, Lab 02, Lab 03)*
+
+- Functional Programming (Streams, Lambdas, Predicates) *(Lab 03)*
+- Null Safety using `Optional` *(Lab 03)*
+- Immutability *(Lab 03)*
+
+- Segment Tree (Range Queries) *(Lab 04)*
+- Recursion and divide-and-conquer techniques *(Lab 04)*
+- Generics and functional interfaces (`BinaryOperator`) *(Lab 04)*
+
+- Behavioral Design Patterns (Observer, Strategy) *(Lab 05)*
+- Polymorphism *(Lab 05, Lab 06, Lab 07)*
+- Open/Closed Principle *(Lab 05, Lab 06, Lab 08)*
+
+- Structural Design Patterns (Adapter, Decorator) *(Lab 06)*
+
+- System design using multiple patterns *(Lab 07)*
+
+- Creational Design Patterns (Factory Method, Singleton) *(Lab 08)*
+- Template Method Pattern *(Lab 08)*
+- Thread-safe design (Double-Checked Locking, Enum Singleton) *(Lab 08)*
+
+- Concurrency and Multithreading *(Lab 09)*
+- Synchronization using `ReentrantLock` and `Condition` *(Lab 09)*
 
 ---
 
@@ -79,20 +194,14 @@ advanced-oop-java-labs
 │
 ├── src
 │   ├── Lab01_Graph_BFS
-│   │   ├── Graph.java
-│   │   └── BFSTest.java
-│   │
 │   ├── Lab02_TravelGraph
-│   │   ├── City.java
-│   │   ├── TravelGraph.java
-│   │   └── TravelPlannerTest.java
-│   │
-│   └── Lab03_SnakesAndLadders
-│       ├── SnakesAndLaddersBoard.java
-│       └── SnakesAndLaddersTest.java
+│   ├── Lab03_SnakesAndLadders
+│   ├── Lab04_SegmentTree
+│   ├── Lab05_BehavioralDesignPatterns
+│   ├── Lab06_StructuralDesignPatterns
+│   ├── Lab07_Refactoring
+│   ├── Lab08_CreationalDesignPattern
+│   └── Lab09_multithreading
 │
 ├── README.md
 └── .gitignore
-```
-
-<sub>Note: README documentation was structured with the assistance of AI tools.</sub>
