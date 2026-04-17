@@ -110,18 +110,19 @@ class MobilePushObserver implements StockObserver {
 }
 
 
-// Main.java
+// AbstractClassVersion.java
 public class Main {
     public static void main(String[] args) {
 
         StockMarket market = new StockMarket();
 
-        // Wire up original three observers
-        market.addObserver(new DashboardDisplay());
+        // Save reference to dashboard so we can remove it later
+        DashboardDisplay dashboard = new DashboardDisplay();
+
+        // Wire up all observers
+        market.addObserver(dashboard);
         market.addObserver(new AlertSystem());
         market.addObserver(new TradeLogger());
-
-        // Add the new mobile push observer — no changes elsewhere needed
         market.addObserver(new MobilePushObserver("rahul@example.com"));
 
         System.out.println(".... Price Updates .....\n");
@@ -141,12 +142,10 @@ public class Main {
         market.updatePrice("TCS", 3100.00);
         System.out.println();
 
-        // Demonstrate removeObserver — unsubscribe dashboard at runtime
+        // Removing the ORIGINAL dashboard reference, not a new object
         System.out.println("... Dashboard unsubscribed ...\n");
-        DashboardDisplay dashboard = new DashboardDisplay();
-        market.addObserver(dashboard);
         market.removeObserver(dashboard);
-        market.updatePrice("INFY", 1550.00);  // dashboard won't print
+        market.updatePrice("INFY", 1550.00);  // dashboard will not print now
     }
 }
 

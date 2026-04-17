@@ -104,37 +104,38 @@ public class Main {
 
         DeliveryPriceCalculator calc = new DeliveryPriceCalculator(new StandardPricing());
 
-        System.out.println("---- Standard Pricing Tests ----");
-        calc.printReceipt(5.0, false, 14);   // Normal case
-        calc.printReceipt(12.0, false, 10);  // Loyalty discount (>10 km)
-        calc.printReceipt(8.0, true, 18);    // Peak hour
+        // Standard deliveries
+        System.out.println("---- Standard Deliveries ----");
+        calc.printReceipt(5.0, false, 14);
+        calc.printReceipt(12.0, true, 13);  // isPeakHour = true, scheduledHour = 13
 
-        System.out.println("\n---- Express Pricing Tests ----");
+        // Express deliveries
+        System.out.println("\n---- Express Deliveries ----");
         calc.setStrategy(new ExpressPricing());
-        calc.printReceipt(3.0, false, 11);   // Off-peak express
-        calc.printReceipt(10.0, true, 19);   // Peak surge
-        calc.printReceipt(50.0, true, 20);   // Max cap test (should not exceed 500)
+        calc.printReceipt(3.0, true, 20);
+        calc.printReceipt(8.0, false, 10);
 
-        System.out.println("\n---- Scheduled Pricing Tests ----");
+        // Scheduled deliveries
+        System.out.println("\n---- Scheduled Deliveries ----");
         calc.setStrategy(new ScheduledPricing());
-        calc.printReceipt(6.0, false, 12);   // Lunch premium
-        calc.printReceipt(6.0, false, 20);   // Dinner premium
-        calc.printReceipt(6.0, false, 23);   // Late-night discount
-        calc.printReceipt(6.0, false, 8);    // Normal hour
+        calc.printReceipt(4.0, false, 19);
+        calc.printReceipt(6.0, false, 23);
 
-        System.out.println("\n---- Subscription Pricing Tests ----");
+        // Subscription delivery (new — added without changing any existing class)
+        System.out.println("\n---- Subscription Delivery ----");
         calc.setStrategy(new SubscriptionPricing());
-        calc.printReceipt(2.0, true, 13);    // Distance/peak irrelevant
-        calc.printReceipt(20.0, false, 22);  // Still flat fee
+        calc.printReceipt(2.0, true, 13);
+        calc.printReceipt(20.0, false, 22);
 
-        System.out.println("\n---- Strategy Switching Test ----");
+        // Runtime strategy switching demo
+        System.out.println("\n---- Strategy Switching at Runtime ----");
         calc.setStrategy(new StandardPricing());
         calc.printReceipt(7.0, false, 15);
 
         calc.setStrategy(new ExpressPricing());
         calc.printReceipt(7.0, false, 15);
 
-        calc.setStrategy(new ScheduledPricing());
+        calc.setStrategy(new SubscriptionPricing());
         calc.printReceipt(7.0, false, 15);
     }
 }
