@@ -2,11 +2,11 @@
 
 This repository contains a collection of lab assignments completed as part of the **Advanced Object-Oriented Programming** course.
 
-The implementations focus on applying core OOP principles and algorithmic problem-solving using Java.
+All lab assignments have been **fully implemented and completed as part of academic coursework**, demonstrating practical understanding of OOP concepts, design patterns, and concurrent systems.
 
 ---
 
-## 📚 Implemented Labs
+## Implemented Labs
 
 ### 🔹 Lab 01 – Graph & BFS Implementation
 
@@ -133,7 +133,7 @@ The board overrides `addEdge()` to block bidirectional edges and maintains its o
 
 ---
 
-### 🔬 Lab 09 — Multithreading (Stock Trading Exchange Simulator)
+###  Lab 09 — Multithreading (Stock Trading Exchange Simulator)
 
 #### ReentrantLock Producer-Consumer
 - Implementation using **ReentrantLock and Condition**
@@ -157,7 +157,7 @@ The board overrides `addEdge()` to block bidirectional edges and maintains its o
 
 ---
 
-## 🧠 Concepts Covered
+##  Concepts Covered
 
 - Encapsulation *(Lab 01)*
 - Abstraction *(Lab 01)*
@@ -202,7 +202,7 @@ The board overrides `addEdge()` to block bidirectional edges and maintains its o
 - Two-Condition pattern (targeted `signal()` vs wasteful `notifyAll()`) *(Lab 09)*
 ---
 
-## 🛠 Tools & Technologies
+## Tools & Technologies
 
 - Java
 - IntelliJ IDEA
@@ -210,7 +210,7 @@ The board overrides `addEdge()` to block bidirectional edges and maintains its o
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 ```text
 advanced-oop-java-labs
 │
