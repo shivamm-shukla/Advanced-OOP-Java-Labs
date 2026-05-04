@@ -133,13 +133,27 @@ The board overrides `addEdge()` to block bidirectional edges and maintains its o
 
 ---
 
-### 🔹 Lab 09 – Multithreading (Producer-Consumer Problem)
+### 🔬 Lab 09 — Multithreading (Stock Trading Exchange Simulator)
 
+#### ReentrantLock Producer-Consumer
 - Implementation using **ReentrantLock and Condition**
 - Supports multiple producers and consumers
 - Avoids race conditions and deadlocks
 - Uses `signalAll()` for proper thread coordination
-- Demonstrates real-world concurrency control
+
+#### Stock Exchange Simulator
+- Real-world concurrency simulation of a live trading exchange
+- **Immutable** `Order` and `MatchedPair` objects (inherently thread-safe)
+- `OrderBook` using **ReentrantLock (fair=true)** + **two Conditions**:
+  - `ordersAvailable` — engine waits here; traders signal on new order
+  - `bookNotFull` — traders wait here; engine signals after consuming a match
+- `ExchangeStats` using **AtomicInteger / AtomicLong** (lock-free counters) + **ReadWriteLock** for consistent price snapshots
+- `Trader` implements **Callable\<String\>** — returns order summary via `Future`
+- `MatchingEngine` implements **Callable\<String\>** — single-thread consumer
+- `Dashboard` using **ScheduledExecutorService** (prints live stats every 2s)
+- `StockExchange` wires everything: **newFixedThreadPool(3)** for 5 traders, **newSingleThreadExecutor()** for engine
+- Full graceful shutdown: `shutdown()` → `awaitTermination()` → `shutdownNow()`
+- `AtomicBoolean exchangeOpen` as shared shutdown signal across all threads
 
 ---
 
@@ -177,7 +191,15 @@ The board overrides `addEdge()` to block bidirectional edges and maintains its o
 
 - Concurrency and Multithreading *(Lab 09)*
 - Synchronization using `ReentrantLock` and `Condition` *(Lab 09)*
-
+- Immutability as thread-safety strategy *(Lab 09)*
+- `volatile` visibility guarantee and `AtomicBoolean` for shutdown flags *(Lab 09)*
+- `AtomicInteger` / `AtomicLong` lock-free CAS operations *(Lab 09)*
+- `ReadWriteLock` — multiple concurrent readers, exclusive writer *(Lab 09)*
+- `Callable` and `Future` for retrieving results from threads *(Lab 09)*
+- Thread pool types: `newFixedThreadPool`, `newSingleThreadExecutor` *(Lab 09)*
+- `ScheduledExecutorService` for periodic background tasks *(Lab 09)*
+- Graceful executor shutdown pattern *(Lab 09)*
+- Two-Condition pattern (targeted `signal()` vs wasteful `notifyAll()`) *(Lab 09)*
 ---
 
 ## 🛠 Tools & Technologies
